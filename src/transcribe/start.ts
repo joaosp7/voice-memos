@@ -1,16 +1,15 @@
 import { LanguageCode, StartTranscriptionJobCommand, TranscribeClient } from "@aws-sdk/client-transcribe";
 
-const params = {
-  TranscriptionJobName: 'Job-TESTE-Node',
-  LanguageCode: LanguageCode.PT_BR,
-  Media: {
-    MediaFileUri: 's3://voice-memos-bucket/teste.ogg'
-  },
-  OutputBucketName: 'voice-memos-bucket',
-}
-
-const transcribeClient = new TranscribeClient({region: 'sa-east-1'})
-export const run = async () => {
+export const run = async (jobName:string, fileName:string) => {
+  const transcribeClient = new TranscribeClient({region: 'sa-east-1'})
+  const params = {
+    TranscriptionJobName: jobName,
+    LanguageCode: LanguageCode.PT_BR,
+    Media: {
+      MediaFileUri: `s3://voice-memos-bucket/${fileName}`
+    },
+    OutputBucketName: 'voice-memos-bucket',
+  }
   try {
     const data = await transcribeClient.send( new StartTranscriptionJobCommand(params));
     console.log('Success - ', data);
@@ -20,5 +19,3 @@ export const run = async () => {
     console.log('Error - ', err)
   }
 }
-
-run();
