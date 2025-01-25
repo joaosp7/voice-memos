@@ -1,7 +1,11 @@
-import z from 'zod'
+import z from 'zod';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const envSchema = z.object({
   BUCKET_NAME: z.string(),
+  OUTPUT_BUCKET: z.string(),
+  BASE_URL: z.string(),
 })
 
 

@@ -1,14 +1,15 @@
 import { LanguageCode, StartTranscriptionJobCommand, TranscribeClient } from "@aws-sdk/client-transcribe";
+import { env } from "../env/env";
 
-export const run = async (jobName:string, fileName:string) => {
+export const transcribe = async (fileName:string,jobName:string) => {
   const transcribeClient = new TranscribeClient({region: 'sa-east-1'})
   const params = {
     TranscriptionJobName: jobName,
     LanguageCode: LanguageCode.PT_BR,
     Media: {
-      MediaFileUri: `s3://voice-memos-bucket/${fileName}`
+      MediaFileUri: 's3://' + env.BUCKET_NAME + `/${fileName}`
     },
-    OutputBucketName: 'voice-memos-bucket',
+    OutputBucketName: env.OUTPUT_BUCKET,
   }
   try {
     const data = await transcribeClient.send( new StartTranscriptionJobCommand(params));

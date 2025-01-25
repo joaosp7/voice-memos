@@ -2,7 +2,6 @@ import { readFile } from "node:fs/promises";
 import { PutObjectCommand, S3Client, S3ServiceException } from "@aws-sdk/client-s3";
 
 export async function uploadS3(bucketName: string, key: string, filePath:string){
-  console.log('ENTREI NO UPLOAD S3');
   const client = new S3Client({});
   const command = new PutObjectCommand({
     Bucket: bucketName,
