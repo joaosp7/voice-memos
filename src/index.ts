@@ -8,7 +8,8 @@ import { uploadToGCP } from "./google/uploadBucket";
 import { transcribeAudioGoogle } from "./google/transcribeAudio";
 
 const app = express();
-const upload = multer({ dest: "tmp/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 app.get("/", (req, res) => {
   res.send("Ok!");
 });
@@ -31,11 +32,9 @@ app.post("/transcribe/amazon", upload.single("file"), async (req: any, res) => {
 });
 
 app.post("/transcribe/google", upload.single("file"), async (req: any, res) => {
-  const filePath = req.file.path;
   const fileName = req.file.originalname;
-  await uploadToGCP(fileName, filePath);
+  await uploadToGCP(fileName, req.file);
   const transcription = await transcribeAudioGoogle(fileName);
-  fs.unlinkSync(filePath);
   res.json({ transcription: transcription }).sendStatus(200);
 });
 

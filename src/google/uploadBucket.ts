@@ -1,13 +1,12 @@
 import { Storage } from "@google-cloud/storage";
 import { env } from "../env/env";
 
-export async function uploadToGCP(fileName: string, filePath: string) {
+export async function uploadToGCP(fileName: string, content: any) {
   const storage = new Storage({ keyFilename: "adc.json" });
-  const options = {
-    destination: fileName,
-  };
+
   try {
-    await storage.bucket(env.BUCKET_NAME).upload(filePath, options);
+    const buff = Buffer.from(JSON.stringify(content));
+    await storage.bucket(env.BUCKET_NAME).file(fileName).save(buff);
     console.log("File uploaded to Cloud Bucket!");
   } catch (err) {
     console.error(err);
