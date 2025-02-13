@@ -1,6 +1,10 @@
 import { LanguageCode } from "@aws-sdk/client-transcribe";
-import { SpeechClient } from "@google-cloud/speech";
+import { SpeechClient } from "@google-cloud/speech/build/src/v1";
 import { env } from "../env/env";
+
+export enum RecognitionConfig {
+  AudioEncoding = "LINEAR16",
+}
 
 export async function transcribeAudioGoogle(fileName: string) {
   const client = new SpeechClient({ keyFilename: "temp.json" });
@@ -10,10 +14,11 @@ export async function transcribeAudioGoogle(fileName: string) {
   };
   const config = {
     languageCode: "pt-BR",
+    enconding: RecognitionConfig.AudioEncoding,
   };
   const request = {
     audio: audio,
-    config: config,
+    config,
   };
   const [response] = await client.recognize(request);
   const transcription = response.results
