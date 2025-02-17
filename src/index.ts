@@ -36,7 +36,7 @@ app.post("/transcribe/google", upload.single("file"), async (req: any, res) => {
   await uploadToGCP(fileName, filePath);
   const transcription = await transcribeAudioGoogle(fileName);
   fs.unlinkSync(filePath);
-  res.json({ transcription: transcription }).sendStatus(200);
+  res.json({ transcription: transcription });
 });
 
 app.listen(3030, () => {
